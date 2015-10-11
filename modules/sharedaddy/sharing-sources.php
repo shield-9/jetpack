@@ -862,7 +862,7 @@ class Share_GooglePlus1 extends Sharing_Source {
 
 		if ( $this->smart ) {
 			$share_url = $this->get_share_url( $post->ID );
-			return '<div class="googleplus1_button"><div class="g-plus" data-action="share" data-annotation="bubble" data-href="' . esc_url( $share_url ) . '"></div></div>';
+			return '<div class="googleplus1_button"><div class="g-plusone" data-annotation="bubble" data-href="' . esc_url( $share_url ) . '"></div></div>';
 		} else {
 			return $this->get_link( $this->get_process_request_url( $post->ID ), _x( 'Google', 'share to', 'jetpack' ), __( 'Click to share on Google+', 'jetpack' ), 'share=google-plus-1', 'sharing-google-' . $post->ID );
 		}
@@ -891,35 +891,21 @@ class Share_GooglePlus1 extends Sharing_Source {
 
 		if ( $this->smart ) { ?>
 			<script>
-			function renderGooglePlus1() {
-				if ( 'undefined' === typeof gapi ) {
-					return;
-				}
-
-				jQuery( '.g-plus' ).each(function() {
-					var $button = jQuery( this );
-
-					if ( ! $button.data( 'gplus-rendered' ) ) {
-						gapi.plusone.render( this, {
-							href: $button.attr( 'data-href' ),
-							size: $button.attr( 'data-size' ),
-							annotation: $button.attr( 'data-annotation' )
-						});
-
-						$button.data( 'gplus-rendered', true );
-					}
-				});
-			}
+			window.___gcfg = {
+				parsetags: 'explicit'
+			};
 
 			(function() {
 				var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-				po.src = 'https://apis.google.com/js/plusone.js';
-				po.innerHTML = '{"parsetags": "explicit"}';
-				po.onload = renderGooglePlus1;
+				po.src = 'https://apis.google.com/js/platform.js';
 				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
 			})();
 
-			jQuery( document.body ).on( 'post-load', renderGooglePlus1 );
+			jQuery( document.body ).on( 'post-load', function() {
+				if ( 'undefined' !== typeof gapi ) {
+					gapi.plusone.go();
+				}
+			} );
 			</script>
 			<?php
 		} else {
@@ -1262,7 +1248,7 @@ class Share_Pinterest extends Sharing_Source {
 		}
 		die();
 	}
-	
+
 	public function display_footer() {
 		/**
 		 * Filter the Pin it button appearing when hovering over images when using the official button style.
